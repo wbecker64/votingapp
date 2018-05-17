@@ -1,6 +1,6 @@
 # Votingapp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.3.
+This project is part of the freecodecamp challenge https://www.freecodecamp.org/challenges/build-a-voting-app.
 
 ## Development server
 
