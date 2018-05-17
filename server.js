@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
-var TERRITORIES_COLLECTION = "territories";
+var VOTINGAPP_COLLECTION = "votingapp";
 
 var app = express();
 app.use(bodyParser.json());
@@ -39,60 +39,58 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
-/*  "/api/territories"
- *    GET: finds all contacts
- *    POST: creates a new contact
+/*  "/api/votes"
+ *    GET: finds all votes
+ *    POST: creates a new vote
  */
 
-app.get("/api/territories", function(req, res) {
-  db.collection(TERRITORIES_COLLECTION).find({}).toArray(function(err, territories) {
+app.get("/api/votes", function(req, res) {
+  db.collection(VOTINGAPP_COLLECTION).find({}).toArray(function(err, votes) {
     if (err) {
-      handleError(res, err.message, "Failed to get territories.");
+      handleError(res, err.message, "Failed to get votes.");
     } else {
-      res.status(200).json(territories);
+      res.status(200).json(votes);
     }
   });
 });
 
-app.post("/api/territories", function(req, res) {
-  var newTerritory = req.body;
+app.post("/api/votes", function(req, res) {
+  var newVote = req.body;
 
   if (!req.body.name) {
     handleError(res, "Invalid territory input", "Must provide a name.", 400);
   }
 
-  db.collection(TERRITORIES_COLLECTION).insertOne(newTerritory, function(err, territory) {
+  db.collection(VOTINGAPP_COLLECTION).insertOne(newVote, function(err, vote) {
     if (err) {
-      handleError(res, err.message, "Failed to create new territory.");
+      handleError(res, err.message, "Failed to create new vote.");
     } else {
-      res.status(201).json(territory.ops[0]);
+      res.status(201).json(vote.ops[0]);
     }
   });
 });
 
-/*  "/api/territories/:id"
- *    GET: find territories by id
- *    PUT: update territories by id
- *    DELETE: deletes territories by id
+/*  "/api/votes/:id"
+ *    GET: find votes by id
+ *    PUT: update votes by id
+ *    DELETE: deletes votes by id
  */
 
-app.get("/api/territories/:id", function(req, res) {
-  db.collection(TERRITORIES_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, territory) {
+app.get("/api/votes/:id", function(req, res) {
+  db.collection(VOTINGAPP_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, vote) {
     if (err) {
-      handleError(res, err.message, "Failed to get territory");
+      handleError(res, err.message, "Failed to get vote");
     } else {
-      res.status(200).json(territory);
+      res.status(200).json(votes);
     }
   });
 });
 
-app.put("/api/territories/:id", function(req, res) {
+app.put("/api/votes/:id", function(req, res) {
   var updateDoc = req.body;
   delete updateDoc._id;
 
-  console.log(updateDoc);
-
-  db.collection(TERRITORIES_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, {$set: updateDoc}, function(err, territory) {
+  db.collection(VOTINGAPP_COLLECTION).updateOne({_id: new ObjectID(req.params.id)}, {$set: updateDoc}, function(err, vote) {
     if (err) {
       handleError(res, err.message, "Failed to update territory");
     } else {
@@ -102,10 +100,10 @@ app.put("/api/territories/:id", function(req, res) {
   });
 });
 
-app.delete("/api/territories/:id", function(req, res) {
-  db.collection(TERRITORIES_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, territory) {
+app.delete("/api/votes/:id", function(req, res) {
+  db.collection(VOTINGAPP_COLLECTION).deleteOne({_id: new ObjectID(req.params.id)}, function(err, vote) {
     if (err) {
-      handleError(res, err.message, "Failed to delete territory");
+      handleError(res, err.message, "Failed to delete vote");
     } else {
       res.status(200).json(req.params.id);
     }
